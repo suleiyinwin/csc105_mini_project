@@ -7,28 +7,31 @@ import CustomButton from "./CustomButton";
 import Axios from "./AxiosFront";
  
 const Navbar = ({ handleOpen = () => {}, user, setUser = () => {} }) => {
-  // useEffect(() => {
-  //   // TODO: Implement get user
-  //   const userToken = Cookies.get("UserToken");
-  //   if (userToken == null || userToken == "undefined") return;
-  //   // 1. check if cookie is set
-  //   // 2. send a request to server
-  //   Axios.get("/me", {
-  //     headers: {
-  //       Authorization: `Bearer ${userToken}`,
-  //     },
-  //   }).then((res) => {
-  //     // 3. if success, set user information
-  //     setUser({
-  //       username: res.data.data.username,
-  //       email: res.data.data.email,
-  //     });
-  //   });
-  // }, []);
-  // const logout = () => {
-  //   setUser();
-  //   Cookies.remove("UserToken");
-  // };
+  useEffect(() => {
+    // TODO: Implement get user
+    const userToken = Cookies.get('UserToken');
+    // console.log(userToken);
+    if (userToken == null || userToken == "undefined") return;
+    // 1. check if cookie is set
+    // 2. send a request to server
+    Axios.get("/me", {
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    }).then((res) => {
+      console.log(res.data);
+      // 3. if success, set user information
+      setUser({
+        username: res.data.user.username,
+        email: res.data.user.email,
+      });
+    });
+  }, []);
+  console.log(user);
+  const logout = () => {
+    setUser();
+    Cookies.remove("UserToken");
+  };
 
   return (
     <Stack
@@ -51,9 +54,22 @@ const Navbar = ({ handleOpen = () => {}, user, setUser = () => {} }) => {
       </Box>
       
       {user ? (
-        <Box sx={{ display: "flex", alignItems: "center", gap: "2rem" }}>
-          {/* <Typography>{user.username}</Typography> */}
-          {/* <CustomButton text="Log out" handle={logout} /> */}
+        <Box sx={{ display: 'flex'}}>
+          <Typography sx={{color:'#ffffff', padding: '6px 25px',fontSize:'18px'}}>{user.username}</Typography>
+          <Box sx={{
+          backgroundColor: '#ffffff',
+          color:'#000000',
+          padding: '6px 18px',
+          borderRadius: 12,
+          border: '1px solid #ffffff',
+          cursor: 'pointer',
+          "&:hover": {
+              //you want this to be the same as the backgroundColor above
+              backgroundColor: "#ffffff",
+            },
+        }}>
+          <CustomButton text="Log out"  handle={logout} />
+          </Box>
         </Box>
       ) : (
         <Box sx={{

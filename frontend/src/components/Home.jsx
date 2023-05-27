@@ -187,6 +187,8 @@ const Home = () => {
           </Box>
         </Stack>
       </Box>
+      <br/>
+      <br/>
       <Container maxWidth="md">
         {user ? (
           posts.length === 0 ? (
@@ -206,8 +208,8 @@ const Home = () => {
                 <Grid item xs={4} key={index}>
                   <PostCard
                     title={post.title}
-                    date={post.updatedAt}
-                    category={posts.category}
+                    date={post.createdAt}
+                    category={post.category}
                     handleClick={() => handleTargetPostChange(post)}
                   />
                 </Grid>

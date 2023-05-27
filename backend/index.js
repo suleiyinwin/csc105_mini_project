@@ -28,6 +28,7 @@ app.use(cookieParser());
 // });
 app.post("/register", require('./register'));
 app.post("/login", require("./login"));
+app.get('/me', require('./getUserById'));
 
 app.listen(port,()=>{
     console.log(`App listening on port ${port}`);

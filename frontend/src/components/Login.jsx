@@ -73,18 +73,17 @@ const Login = ({
         password,
       });
       if (response.data.success) {
-        
         setUsernameOrEmail('');
         setPassword(' ');
-        handleClose();
         setUser({
-          username:response.data.data.username,
-          email:response.data.data.email,
+          username:response.data.username,
+          email:response.data.email,
       });
         setStatus({
           msg:response.data.msg,
           severity:'success'
         });
+        handleClose();
       }
     }
     catch(e){
@@ -242,7 +241,7 @@ const Login = ({
         <TextField
           sx={signField}
           style={{ backgroundColor: "#F0F0F0" }}
-          label="Email"
+          label="Username or"
           value={usernameOrEmail}
           fullWidth
           error={usernameOrEmailError !== ""}

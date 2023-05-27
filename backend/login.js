@@ -29,17 +29,18 @@ module.exports=(req,res)=>{
             if(valid){
                 const token = jwt.sign(
 					{
-						userId: rows[0].id,
+						user: rows[0],
 					},
 					"ZJGX1QL7ri6BGJWj3t",
 					{ expiresIn: "1h" }
 				);
-                res.cookie("user", token);
+                res.cookie("UserToken", token);
                 res.json({
                 success: true,
                 message: "Login credential is correct",
                 user: rows[0],
             });
+            // return response.cookie('UserToken', token).json(res);
             }
             else{
                 res.json({

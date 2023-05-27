@@ -1,36 +1,29 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { format } from 'fecha';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 
 const PostCard=({ title = '', date = '', category='',handleClick = () => {} })=>{
     return(
-        <Box onClick={handleClick}
-            sx={{
-        backgroundColor: 'white',
-        padding: '6px 18px',
-        borderRadius: 3,
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: 'rgba(255,255,255,0.6)',
-          transform: 'scale(1.05)',
-          transition: 'all 0.1s ease-in-out',
-        },
-      }}>
+      <Card onClick={handleClick} style={{ borderRadius: "20px" }}>
+      <CardContent style={{ backgroundColor: "#F0F0F0" }}>
+        <Typography variant="subtitle1" color="#023047">
+          {category}
+        </Typography>
+        <br />
         <Typography
-        fontSize={26}
-        paddingY={2}
-        sx={{ color: '#2B2B2B' }}
-        textOverflow="ellipsis"
-        whiteSpace="nowrap"
-        overflow="hidden"
-      >
-        {title}
-      </Typography>
-      {/* <Typography align="right" fontSize={14} sx={{ color: '#9E9E9E' }}>
-        {format(new Date(date), 'DD/MM/YYYY hh:mm A')}
-      </Typography> */}
-            
-        </Box>
+          variant="h6"
+          color="#000000"
+          height="100px"
+          overflow="hidden"
+        >
+          {title}
+        </Typography>
+        <br />
+        <Typography variant="subtitle1" color="#023047">
+          {date}
+        </Typography>
+      </CardContent>
+    </Card>
+        
     )
 }
 export default PostCard;
