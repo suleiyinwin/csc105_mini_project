@@ -13,10 +13,8 @@ import GlobalContext from "./GlobalContext";
 import Cookies from "js-cookie";
 import Axios from "./AxiosFront";
 import PostCreateModal from "./PostCreateModal";
-import PostDetailModal from "./PostDetailModal";
-import PostDeleteModal from "./PostDetailModal";
 import PostCard from "./PostCard";
-import PostEditModal from "./PostEditModal";
+
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const Home = () => {
@@ -27,19 +25,15 @@ const Home = () => {
   const [targetPost, setTargetPost] = useState({});
   const [posts, setPosts] = useState([]);
 
-  // useEffect(() => {
-  //   // TODO: Implement get posts by user's token
-  //   // 1. check if user is logged in
-  //   const userToken = Cookies.get('UserToken');
-  //   if (userToken !== undefined && userToken !== 'undefined') {
-  //     // 2. call API to get posts
-  //     Axios.get('/posts', { headers: { Authorization: `Bearer ${userToken}` } }).then((res) => {
-  //       // 3. set posts to state
-  //       setPosts(res.data.data);
-  //     });
-  //   }
-  // }, [user]);
-
+  useEffect(()=>{
+    const userToken = Cookies.get('UserToken');
+    if(userToken !== undefined && userToken !== 'undefined') {
+        Axios.get('/postsByUser', { headers: { Authorization: `Bearer ${userToken}`}})
+        .then((res)=>{
+            setPosts(res.data.data);
+        });
+    }
+},[user]);
   // Post Create Modal
   const handlePostCreateOpen = () => {
     if (!user) {
@@ -56,56 +50,39 @@ const Home = () => {
   const handlePostCreateClose = () => {
     setOpenCreate(false);
   };
-  // Post Edit Modal
-  const handlePostEditOpen = () => {
-    setOpenEdit(true);
-  };
-  const handlePostEditClose = () => {
-    setOpenEdit(false);
-  };
+  
+ 
 
-  // Post Detail Modal
-  const handlePostDetailOpen = () => {
-    setOpenDetail(true);
-  };
-  const handlePostDetailClose = () => {
-    setOpenDetail(false);
-  };
+  
 
-  const handleTargetPostChange = (post) => {
-    setTargetPost(post);
-    handlePostDetailOpen();
-  };
+  const handleDelete = async (id) => {
+    try {
+      const userToken = Cookies.get('UserToken');
+      const response = await Axios.delete(`/post/${id}`, {
+        headers: { Authorization: `Bearer ${userToken}` },
+      });
 
-  // Edit Post
-  const handleEdit = () => {
-    handlePostDetailClose();
-    handlePostEditOpen();
+      if (response.data.success) {
+        // TODO: show status of success here
+        console.log(posts)
+        const newPosts = posts.filter((p)=>p.id !== id)
+        console.log(id,
+            newPosts
+        );
+        setPosts(newPosts)
+        setStatus({severity:'success', msg:'Delete post successfully'})
+        // navigate(-1);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        // TODO: show status of error from AxiosError here
+        setStatus({severity:'error', msg:error.response.data.error});
+      } else {
+        // TODO: show status of other errors here
+        setStatus({severity:'error',msg: error.message});
+      }
+    }
   };
-
-  // Delete Post
-  // const handleDelete = async () => {
-  //   // TODO: Implement delete post
-  //   try{
-  //     // 1. call API to delete post
-  //   const userToken=Cookies.get('UserToken');
-  //   const response=await Axios.delete(`/post/${targetPost.id}`,{
-  //     headers:{Authorization:`Bearer ${userToken}`},
-  //   });
-  //   // 2. if successful, set status and remove post from state
-  //   if(response.data.success) {
-  //     setStatus({severity:'success',msg:'Delete post successfully'});
-  //     setPosts(posts.filter((n)=>n.id!==targetPost.id));
-  //     handlePostDetailClose();}
-  //   }catch(error){
-  //     // 3. if delete post failed, check if error is from calling API or not
-  //     if(error instanceof AxiosError && error.response) {
-  //       setStatus({severity:'error',msg:error.response.data.error});
-  //     }else{
-  //       setStatus({severity:'error',msg:error.message});
-  //     }
-  //   }
-  // };
   const entry = {
     padding: "6% 6% 2% 6%",
     backgroundColor: "#A3D6EE",
@@ -120,19 +97,6 @@ const Home = () => {
   });
   return (
     <Box>
-      <PostDetailModal
-        post={targetPost}
-        open={openDetail}
-        handleClose={handlePostDetailClose}
-        handleEdit={handleEdit}
-        // handleDelete={handleDelete}
-      />
-      <PostEditModal
-        post={targetPost}
-        open={openEdit}
-        handleClose={handlePostEditClose}
-        setPosts={setPosts}
-      />
       <PostCreateModal
         open={openCreate}
         handleClose={handlePostCreateClose}
@@ -205,12 +169,14 @@ const Home = () => {
           ) : (
             <Grid container spacing={2}>
               {posts.map((post, index) => (
-                <Grid item xs={4} key={index}>
+                <Grid item xs={12} sm={6} md={6} key={index}>
                   <PostCard
-                    title={post.title}
-                    date={post.createdAt}
+                    postId={post.id}
+                    title={post.title} 
+                    description={post.description} 
                     category={post.category}
-                    handleClick={() => handleTargetPostChange(post)}
+                    date={post.updatedAt}
+                    handleDelete={handleDelete}
                   />
                 </Grid>
               ))}

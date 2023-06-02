@@ -1,7 +1,9 @@
 import { useState, useContext } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 import GlobalContext from './GlobalContext';
-import { ElevenMpTwoTone } from '@mui/icons-material';
+import Axios from './AxiosFront';
+import { AxiosError } from 'axios';
+import Cookies from 'js-cookie';
 //handleOpen,hC,postarr
 const PostCreateModal=({ open = false, post=()=>{}, handleClose = () => {}, setPosts = () => {} })=>{
 
@@ -21,12 +23,30 @@ const PostCreateModal=({ open = false, post=()=>{}, handleClose = () => {}, setP
         if(Object.keys(error).length) return false;
         return true;
       }
-      const submit =()=>  {
+      const submit = async () =>  {
         if(!validateForm()) return;
-        setPosts([...post,newPost]);
+        try{
+          const userToken = Cookies.get('UserToken');
+          const response = await Axios.post('/post', newPost, {
+            headers: { Authorization: `Bearer ${userToken}`},
+          })
+          console.log(response.data);
+          if(response.data.success){
+            setPosts((prev) => [...prev, response.data.data]);
+            resetAndClose();
+          }
+        } catch (error) {
+          if(error instanceof AxiosError && error.response) {
+            setStatus({severity:'error', msg:error.response.data.error});
+      } else {
+        // TODO: show status of other errors here
+        setStatus({severity:'error',msg: error.message});
+      }
+        }
+        // setPosts([...post,newPost]);
         // setNewPost(" ");
         // setError(true);
-        handleClose();
+        // handleClose();
         
       };
       const resetAndClose = () => {

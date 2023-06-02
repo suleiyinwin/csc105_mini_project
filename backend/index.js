@@ -29,7 +29,11 @@ app.use(cookieParser());
 app.post("/register", require('./register'));
 app.post("/login", require("./login"));
 app.get('/me', require('./getUserById'));
+app.post("/post",require("./CreatePost"));
+app.get("/postsByUser",require('./postsByUser'));
+app.patch('/post',require('./editPost'));
+app.delete('/post/:postId',require("./deletePost"));
 
 app.listen(port,()=>{
     console.log(`App listening on port ${port}`);
-});                                              
+});                                               

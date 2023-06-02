@@ -27,7 +27,7 @@ const Navbar = ({ handleOpen = () => {}, user, setUser = () => {} }) => {
       });
     });
   }, []);
-  console.log(user);
+  // console.log(user);
   const logout = () => {
     setUser();
     Cookies.remove("UserToken");
