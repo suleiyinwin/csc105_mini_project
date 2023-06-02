@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 //handleOpen,hC,postarr
 const PostCreateModal=({ open = false, post=()=>{}, handleClose = () => {}, setPosts = () => {} })=>{
-
+ 
     //input
     const [newPost, setNewPost] = useState({
         title: '',

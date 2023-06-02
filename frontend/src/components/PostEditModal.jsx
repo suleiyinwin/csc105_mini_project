@@ -9,9 +9,12 @@ import GlobalContext from './GlobalContext';
 // import Axios from '../../../share/AxiosInstance';
 
 const PostEditModal = ({ post = {}, open = false, handleClose = () => {}, setPost = () => {} }) => {
+
   const [newPost, setNewPost] = useState(post);
   const [error, setError] = useState({});
   const { user, setStatus } = useContext(GlobalContext);
+
+
   const validateForm=()=>{
     const error={};
     if(!newPost.title) error.title='Title is required';
@@ -74,7 +77,7 @@ console.log(post.postId);
   };
 
   const handleChange = (e) => {
-    setNewPost({
+    setNewPost({ 
       ...newPost,
       [e.target.name]: e.target.value,
     });

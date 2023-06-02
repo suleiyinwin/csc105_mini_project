@@ -20,9 +20,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 const Home = () => {
   const { user, setStatus } = useContext(GlobalContext);
   const [openCreate, setOpenCreate] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
-  const [targetPost, setTargetPost] = useState({});
+ 
   const [posts, setPosts] = useState([]);
 
   useEffect(()=>{
@@ -51,10 +49,6 @@ const Home = () => {
     setOpenCreate(false);
   };
   
- 
-
-  
-
   const handleDelete = async (id) => {
     try {
       const userToken = Cookies.get('UserToken');

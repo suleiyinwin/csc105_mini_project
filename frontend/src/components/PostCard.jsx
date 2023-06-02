@@ -1,15 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import GlobalContext from './GlobalContext';
-import { Avatar, Card, CardActionArea, CardActions, CardContent, CardHeader, IconButton, Typography, Button, Box, Grid } from '@mui/material';
+import { Avatar, Card, CardActionArea, CardActions, CardContent, CardHeader, IconButton, Typography, Button, Box, Grid, CardMedia } from '@mui/material';
 import ModeEditRoundedIcon from '@mui/icons-material/ModeEditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+// import { format } from "date-fns";
+import PostDetailModal from './PostDetailModal';
+import { format } from 'fecha';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import PostEditModal from './PostEditModal';
 const PostCard=({ postId,title = '', date = '',description='', category='',handleDelete = (id) => {} })=>{
   const {user, setStatus} = useContext(GlobalContext);
   const [openEdit, setOpenEdit] = useState(false);
-
+  const [openDetail,setOpenDetail]=useState(false);
   const [post, setPost] = useState({
     postId: postId,
     title: title,
@@ -17,12 +20,24 @@ const PostCard=({ postId,title = '', date = '',description='', category='',handl
     category:category,
     date: date
   });
-  console.log(postId);
+  
+  // console.log(postId);
 const handlePostEditOpen = () => {
   setOpenEdit(true);
 };
 const handlePostEditClose = () => {
   setOpenEdit(false);
+};
+const handlePostDetailOpen=()=>{
+  setOpenDetail(true);
+};
+const handlePostDetailClose=()=>{
+  setOpenDetail(false);
+};
+
+
+const handleDetail=()=>{
+  handlePostDetailOpen();
 };
 const handleEdit = () => {
   // handlePostDetailClose();
@@ -31,6 +46,9 @@ const handleEdit = () => {
 useEffect(()=>{
   console.log(post);
 },[]);
+
+
+// console.log(formattedDate);
     return(
       
        
@@ -39,22 +57,29 @@ useEffect(()=>{
         justifyContent:'center',
         
       }}>
+        
         <Card sx={{width:'100%',
                 fontFamily:'Roboto',margin:"1% 0"}}>
-          <CardActionArea sx={{bgcolor:'#F5F5F5'}} >
+          <CardActionArea  sx={{bgcolor:'#F5F5F5'}} >
             
             <CardContent>
               {/* input title and description with axios */}
-              <Typography variant="h6" component="h1" sx={{fontFamily:'Roboto'}}>
-                {post.title}
+              <Typography variant="subtitle1" color="#023047" sx={{fontFamily:'Roboto'}}>
+                {post.category}
               </Typography>
               {/* will expand on dot icon */}
-              <Typography variant="body1" component="p" sx={{fontFamily:'Roboto'}}>
-                {post.description}
+              <Typography variant="h6" color="#000000"  sx={{fontFamily:'Roboto',fontSize:'22px'}}>
+                {post.title}
               </Typography>
+              {/* <Typography variant="subtitle1" color="#023047">
+              {format(new Date(date), 'DD/MM/YYYY hh:mm A')}
+                        </Typography> */}
             </CardContent>
+           
           </CardActionArea>
+          
           <CardActions disableSpacing sx={{ display: 'flex' }}>
+            
             <IconButton onClick={handlePostEditOpen}  aria-label="edit post" sx={{color:'#4059AD'}}>
               <ModeEditRoundedIcon />
             </IconButton>
@@ -63,12 +88,12 @@ useEffect(()=>{
             <IconButton onClick={()=>handleDelete(post.postId)} aria-label="delete post" sx={{color:'#4059AD'}}>
               <DeleteRoundedIcon />
             </IconButton>
+            <Button onClick={handleDetail}>
+              Details
+           </Button>
+           <PostDetailModal handleDetail={handleDetail} handleClose={handlePostDetailClose}   open={openDetail} post={post}/>
             <Box sx={{ flexGrow: 1 }}></Box>
-            {/* <Button variant="outlined" startIcon={<CommentRoundedIcon />} onClick={commentToggle} sx={{fontFamily:'Roboto',
-                color:'#4059AD'}}>
-              Comment
-            </Button>
-            <CommentModal open={commentOpen} onClose={commentToggle} /> */}
+            
           </CardActions>
         </Card>
 
